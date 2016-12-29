@@ -4,13 +4,22 @@ I have a bunch of data and photos of charter boats (not included in this reposit
 This script iterates through that dataset and generates a promotional video for each boat (provided there is enough data to create it)
 """
 
+from collections import deque
 import json
 import os
+import sys
+
+from slides import KenBurnsSlide
+from render import Renderer
 
 
 def make_video(boat_info, pictures):
     print(boat_info['name'], len(pictures))
-    # TODO
+    slides = deque()
+    for picture in pictures:
+        slides.append(KenBurnsSlide(picture, 'testing', 1, (0,0), 1.4, (500,300)))
+
+    Renderer(slides, f'{boat_info["name"]}.mp4')
 
 
 def image_paths_in(root: str):
@@ -30,6 +39,7 @@ def main():
                     boat_info = json.load(boat_file)
                 pictures = image_paths_in(root)
                 make_video(boat_info, pictures)
+                sys.exit()
 
 
 if __name__ == '__main__':
