@@ -19,11 +19,11 @@ def make_video(boat_info, pictures):
     slides = deque()
     slides.append(IntroSlide(pictures[0]))
     for picture in pictures:
-        start_x = random.randrange(400, 1520)
-        end_x = random.randrange(400, 1500)
-        end_y = random.randrange(200, 800)
-        start_y = random.randrange(200, 800)
-        slides.append(KenBurnsSlide(picture, 1, (start_x, start_y), 1.4, (1000, 500)))
+        start_x = random.random() * 0.5 + 0.25
+        end_x = random.random() * 0.5 + 0.25
+        end_y = random.random() * 0.5 + 0.25
+        start_y = random.random() * 0.5 + 0.25
+        slides.append(KenBurnsSlide(picture, 0.8, (start_x, start_y), 1.0, (end_x, end_y)))
 
     Renderer(slides, f'{boat_info["name"]}.mp4')
 
