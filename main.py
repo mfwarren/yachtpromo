@@ -32,7 +32,8 @@ def image_paths_in(root: str):
     images = []
     for root, subdirs, files in os.walk(root):
         for f in files:
-            if f[f.rfind('.'):] in ['.png', '.jpg', '.jpeg']:
+            if f[f.rfind('.'):] in ['.jpg', '.jpeg'] and \
+                'brochure99' not in f:
                 images.append(os.path.join(root, f))
     return images
 
