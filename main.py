@@ -11,7 +11,7 @@ import sys
 import random
 
 from slides import KenBurnsSlide, IntroSlide
-from render import Renderer
+from render import render_slides, render_audio
 
 
 def make_video(boat_info, pictures):
@@ -25,7 +25,10 @@ def make_video(boat_info, pictures):
         start_y = random.random() * 0.5 + 0.25
         slides.append(KenBurnsSlide(picture, 0.8, (start_x, start_y), 1.0, (end_x, end_y)))
 
-    Renderer(slides, f'{boat_info["name"]}.mp4')
+    video_clip = render_slides(slides)
+    video_clip = render_audio(video_clip)
+    video_clip = render_captions(video_clip, boat_info)
+    video_clip.write_videofile(f'{boat_info["name"]}.mp4')
 
 
 def image_paths_in(root: str):
