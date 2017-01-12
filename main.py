@@ -11,7 +11,7 @@ import sys
 import random
 
 from slides import KenBurnsSlide, IntroSlide
-from render import render_slides, render_audio
+from render import render_slides, render_audio, render_captions
 
 
 def make_video(boat_info, pictures):

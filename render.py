@@ -1,11 +1,13 @@
 import os
 import random
 import subprocess
+import time
 import tempfile
 
 from PIL import Image
 import moviepy.audio.fx.all as afx
 import moviepy.editor as mp
+from moviepy.video.tools.segmenting import findObjects
 
 from slides import TRANSITION_FRAMES
 
@@ -44,6 +46,9 @@ def render_slides(slides):
 
         prev_slide = slide
 
+    pipe.close()
+    time.sleep(1) # time to finsih writing to disk
+
     return mp.VideoFileClip(export_file)
 
 
@@ -65,4 +70,17 @@ def render_audio(video):
 
 
 def render_captions(video, meta_info):
+    txt_clip = mp.TextClip(meta_info['name'], fontsize=70, color='white', font="fonts/MerriweatherSans-Regular.ttf",)
+    txt_clip = txt_clip.set_pos('center').set_duration(10)
+    video = mp.CompositeVideoClip([video, txt_clip])
+    # txtClip = TextClip(meta_info['name'], color='white', font="MerriweatherSans",
+    #                    kerning=5, fontsize=100)
+    # cvc = CompositeVideoClip([txtClip.set_pos('center')],
+    #                          size=video.size, transparent=True)
+
+    # letters = findObjects(cvc)
+
+    # clips = [ CompositeVideoClip( moveLetters(letters,funcpos),
+    #                             size = screensize).subclip(0,5)
+    #         for funcpos in [vortex, cascade, arrive, vortexout] ]
     return video
