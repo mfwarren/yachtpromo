@@ -10,6 +10,7 @@ import moviepy.editor as mp
 from moviepy.video.tools.segmenting import findObjects
 
 from slides import TRANSITION_FRAMES
+from add_captions import moveLetters, arrive
 
 MUSIC_FILES = []
 
@@ -47,7 +48,7 @@ def render_slides(slides):
         prev_slide = slide
 
     pipe.close()
-    time.sleep(1) # time to finsih writing to disk
+    time.sleep(5) # time to finsih writing to disk
 
     return mp.VideoFileClip(export_file)
 
@@ -71,7 +72,11 @@ def render_audio(video):
 
 def render_captions(video, meta_info):
     txt_clip = mp.TextClip(meta_info['name'], fontsize=70, color='white', font="fonts/MerriweatherSans-Regular.ttf",)
-    txt_clip = txt_clip.set_pos('center').set_duration(10)
+    txt_clip = mp.CompositeVideoClip([txt_clip.set_pos('center')], size=video.size)
+    # .set_duration(10)
+    letters = findObjects(txt_clip)
+    txt_clip = mp.CompositeVideoClip(moveLetters(letters, arrive),
+                                size=video.size).subclip(0,5)
     video = mp.CompositeVideoClip([video, txt_clip])
     # txtClip = TextClip(meta_info['name'], color='white', font="MerriweatherSans",
     #                    kerning=5, fontsize=100)
