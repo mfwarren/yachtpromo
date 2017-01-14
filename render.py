@@ -10,7 +10,7 @@ import moviepy.editor as mp
 from moviepy.video.tools.segmenting import findObjects
 
 from slides import TRANSITION_FRAMES
-from add_captions import moveLetters, arrive
+from add_captions import moveLetters, arrive, vortexout
 
 MUSIC_FILES = []
 
@@ -75,8 +75,8 @@ def render_captions(video, meta_info):
     txt_clip = mp.CompositeVideoClip([txt_clip.set_pos('center')], size=video.size)
     # .set_duration(10)
     letters = findObjects(txt_clip)
-    txt_clip = mp.CompositeVideoClip(moveLetters(letters, arrive),
-                                size=video.size).subclip(0,5)
+    txt_clip = mp.concatenate_videoclips([mp.CompositeVideoClip(moveLetters(letters, arrive), size=video.size).subclip(0,5),
+                                          mp.CompositeVideoClip(moveLetters(letters, vortexout), size=video.size).subclip(0,5)])
     video = mp.CompositeVideoClip([video, txt_clip])
     # txtClip = TextClip(meta_info['name'], color='white', font="MerriweatherSans",
     #                    kerning=5, fontsize=100)
