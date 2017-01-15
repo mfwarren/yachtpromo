@@ -70,22 +70,21 @@ def render_audio(video):
     return video.set_audio(audio)
 
 
-def render_captions(video, meta_info):
-    txt_clip = mp.TextClip(meta_info['name'], fontsize=70, color='white', font="fonts/MerriweatherSans-Regular.ttf",)
-    txt_clip = mp.CompositeVideoClip([txt_clip.set_pos('center')], size=video.size)
+def caption_clip(text, size):
+    txt_clip = mp.TextClip(text, fontsize=70, color='white', font="fonts/MerriweatherSans-Regular.ttf",)
+    txt_clip = mp.CompositeVideoClip([txt_clip.set_pos('center')], size=size)
     # .set_duration(10)
     letters = findObjects(txt_clip)
-    txt_clip = mp.concatenate_videoclips([mp.CompositeVideoClip(moveLetters(letters, arrive), size=video.size).subclip(0,5),
-                                          mp.CompositeVideoClip(moveLetters(letters, vortexout), size=video.size).subclip(0,5)])
+    return [mp.CompositeVideoClip(moveLetters(letters, arrive), size=size).subclip(0,5),
+            mp.CompositeVideoClip(moveLetters(letters, vortexout), size=size).subclip(0,5)]
+
+
+def render_captions(video, meta_info):
+    clip_sequence = []
+    for text in [meta_info['name'], meta_info['summer_operations']]:
+        clip_sequence += caption_clip(text, video.size)
+
+    txt_clip = mp.concatenate_videoclips(clip_sequence)
     video = mp.CompositeVideoClip([video, txt_clip])
-    # txtClip = TextClip(meta_info['name'], color='white', font="MerriweatherSans",
-    #                    kerning=5, fontsize=100)
-    # cvc = CompositeVideoClip([txtClip.set_pos('center')],
-    #                          size=video.size, transparent=True)
 
-    # letters = findObjects(cvc)
-
-    # clips = [ CompositeVideoClip( moveLetters(letters,funcpos),
-    #                             size = screensize).subclip(0,5)
-    #         for funcpos in [vortex, cascade, arrive, vortexout] ]
     return video
