@@ -70,9 +70,9 @@ def render_audio(video):
     return video.set_audio(audio)
 
 
-def caption_clip(text, size):
+def caption_clip(text, size, position='center'):
     txt_clip = mp.TextClip(text, fontsize=70, color='white', font="fonts/MerriweatherSans-Regular.ttf",)
-    txt_clip = mp.CompositeVideoClip([txt_clip.set_pos('center')], size=size)
+    txt_clip = mp.CompositeVideoClip([txt_clip.set_pos(position)], size=size)
     # .set_duration(10)
     letters = findObjects(txt_clip)
     return [mp.CompositeVideoClip(moveLetters(letters, arrive), size=size).subclip(0,5),
@@ -81,8 +81,10 @@ def caption_clip(text, size):
 
 def render_captions(video, meta_info):
     clip_sequence = []
-    for text in [meta_info['name'], meta_info['summer_operations']]:
-        clip_sequence += caption_clip(text, video.size)
+
+    clip_sequence += caption_clip(meta_info['name'], video.size)
+    clip_sequence += caption_clip(meta_info['summer_operations'], video.size, position=('center', 'bottom'))
+    clip_sequence += caption_clip(meta_info['description'], video.size)
 
     txt_clip = mp.concatenate_videoclips(clip_sequence)
     video = mp.CompositeVideoClip([video, txt_clip])
