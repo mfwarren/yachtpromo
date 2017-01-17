@@ -3,6 +3,7 @@ import random
 import subprocess
 import time
 import tempfile
+import textwrap
 
 from PIL import Image
 import moviepy.audio.fx.all as afx
@@ -78,13 +79,19 @@ def caption_clip(text, size, position='center'):
     return [mp.CompositeVideoClip(moveLetters(letters, arrive), size=size).subclip(0,5),
             mp.CompositeVideoClip(moveLetters(letters, vortexout), size=size).subclip(0,5)]
 
+def unanimated_clip(text, size, position=('center', 'bottom')):
+    txt_clip = mp.TextClip(text, fontsize=70, color='white', font="fonts/MerriweatherSans-Regular.ttf",)
+    txt_clip = mp.CompositeVideoClip([txt_clip.set_pos(position)], size=size)
+    return [txt_clip.set_duration(5)]
+
 
 def render_captions(video, meta_info):
     clip_sequence = []
 
     clip_sequence += caption_clip(meta_info['name'], video.size)
     clip_sequence += caption_clip(meta_info['summer_operations'], video.size, position=('center', 'bottom'))
-    clip_sequence += caption_clip(meta_info['description'], video.size)
+    for line in textwrap.wrap(meta_info['description'], 50):
+        clip_sequence += unanimated_clip(line, video.size)
 
     txt_clip = mp.concatenate_videoclips(clip_sequence)
     video = mp.CompositeVideoClip([video, txt_clip])
