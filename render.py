@@ -79,10 +79,10 @@ def caption_clip(text, size, position='center'):
     return [mp.CompositeVideoClip(moveLetters(letters, arrive), size=size).subclip(0,5),
             mp.CompositeVideoClip(moveLetters(letters, vortexout), size=size).subclip(0,5)]
 
-def unanimated_clip(text, size, position=('center', 'bottom')):
+def unanimated_clip(text, size, position=('center', 'bottom'), duration=5):
     txt_clip = mp.TextClip(text, fontsize=70, color='white', font="fonts/MerriweatherSans-Regular.ttf",)
     txt_clip = mp.CompositeVideoClip([txt_clip.set_pos(position)], size=size)
-    return [txt_clip.set_duration(5)]
+    return [txt_clip.set_duration(duration)]
 
 
 def render_captions(video, meta_info):
@@ -90,8 +90,9 @@ def render_captions(video, meta_info):
 
     clip_sequence += caption_clip(meta_info['name'], video.size)
     clip_sequence += caption_clip(meta_info['summer_operations'], video.size, position=('center', 'bottom'))
-    for line in textwrap.wrap(meta_info['description'], 50):
-        clip_sequence += unanimated_clip(line, video.size)
+    description_captions = textwrap.wrap(meta_info['description'], 50)
+    for line in description_captions:
+        clip_sequence += unanimated_clip(line, video.size, duration=(video.duration-20)/len(description_captions))
 
     txt_clip = mp.concatenate_videoclips(clip_sequence)
     video = mp.CompositeVideoClip([video, txt_clip])
