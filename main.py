@@ -12,6 +12,7 @@ import random
 
 from slides import KenBurnsSlide, IntroSlide
 from render import render_slides, render_audio, render_captions
+from upload_video import get_authenticated_service, initialize_upload
 
 
 def make_video(boat_info, pictures):
@@ -29,6 +30,7 @@ def make_video(boat_info, pictures):
     video_clip = render_audio(video_clip)
     video_clip = render_captions(video_clip, boat_info)
     video_clip.write_videofile(f'{boat_info["name"]}.mp4')
+    return (f'{boat_info["name"]}.mp4', boat_info)
 
 
 def image_paths_in(root: str):
@@ -41,6 +43,17 @@ def image_paths_in(root: str):
     return images
 
 
+def upload_video(filename, boat_info):
+    if not os.path.exists(filename):
+        exit("file not found.")
+
+    youtube = get_authenticated_service(args)
+    try:
+        initialize_upload(youtube, args)
+    except HttpError, e:
+        print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
+
+
 def main():
     for root, subdirs, files in os.walk('./data/'):
         for f in files:
@@ -48,7 +61,9 @@ def main():
                 with open(os.path.join(root, f)) as boat_file:
                     boat_info = json.load(boat_file)
                 pictures = image_paths_in(root)
-                make_video(boat_info, pictures)
+                filename = make_video(boat_info, pictures)
+                upload_video(filename, boat_info)
+
                 sys.exit()
 
 
