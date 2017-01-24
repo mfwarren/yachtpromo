@@ -49,9 +49,16 @@ def upload_video(filename, boat_info):
 
     youtube = get_authenticated_service(args)
     try:
+        args = {
+            'file': filename,
+            'title': boat_info['name'],
+            'description': boat_info['link'] + '\n\n' + boat_info['description'] + '\n\nMusic by bensound.com',
+            'category': 19,
+            'keywords': 'charter, yacht,' + ','.join(boat_info['summer_operations'], boat_info['winter_operations'], boat_info['type'])
+        }
         initialize_upload(youtube, args)
-    except HttpError, e:
-        print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
+    except HttpError as e:
+        print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 
 
 def main():
