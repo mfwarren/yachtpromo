@@ -72,7 +72,7 @@ def render_audio(video):
 
 
 def caption_clip(text, size, position='center'):
-    txt_clip = mp.TextClip(text, fontsize=70, color='white', font="fonts/MerriweatherSans-Regular.ttf",)
+    txt_clip = mp.TextClip(text, fontsize=70, color='white', stroke_color="black", font="fonts/MerriweatherSans-Regular.ttf",)
     txt_clip = mp.CompositeVideoClip([txt_clip.set_pos(position)], size=size)
     # .set_duration(10)
     letters = findObjects(txt_clip)
@@ -80,7 +80,7 @@ def caption_clip(text, size, position='center'):
             mp.CompositeVideoClip(moveLetters(letters, vortexout), size=size).subclip(0,5)]
 
 def unanimated_clip(text, size, position=('center', 'bottom'), duration=5):
-    txt_clip = mp.TextClip(text, fontsize=70, color='white', font="fonts/MerriweatherSans-Regular.ttf",)
+    txt_clip = mp.TextClip(text, fontsize=70, color='white', bg_color="black", font="fonts/MerriweatherSans-Regular.ttf",)
     txt_clip = mp.CompositeVideoClip([txt_clip.set_pos(position)], size=size)
     return [txt_clip.set_duration(duration)]
 
