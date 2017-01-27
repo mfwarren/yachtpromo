@@ -72,17 +72,20 @@ def upload_video(filename, boat_info):
 
 
 def main():
+    i = 0
     for root, subdirs, files in os.walk('./data/'):
         for f in files:
             if f == 'meta.json':
+                i = i + 1
+                if i > 10:
+                    sys.exit()
+
                 with open(os.path.join(root, f)) as boat_file:
                     boat_info = json.load(boat_file)
                 pictures = image_paths_in(root)
                 filename = make_video(boat_info, pictures)
                 filename= f'{boat_info["name"]}.mp4'
                 upload_video(filename, boat_info)
-
-                sys.exit()
 
 
 if __name__ == '__main__':
