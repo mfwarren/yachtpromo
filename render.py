@@ -89,7 +89,7 @@ def render_captions(video, meta_info):
     clip_sequence = []
 
     clip_sequence += caption_clip(meta_info['name'], video.size)
-    clip_sequence += caption_clip(meta_info['summer_operations'], video.size, position=('center', 'bottom'))
+    clip_sequence += unanimated_clip(meta_info['summer_operations'], video.size)
     description_captions = textwrap.wrap(meta_info['description'], 50)
     for line in description_captions:
         clip_sequence += unanimated_clip(line, video.size, duration=(video.duration-20)/len(description_captions))

@@ -77,8 +77,11 @@ def main():
         for f in files:
             if f == 'meta.json':
                 i = i + 1
+                print(f'Video {i}')
                 if i > 10:
                     sys.exit()
+                if i <= 4:
+                    continue
 
                 with open(os.path.join(root, f)) as boat_file:
                     boat_info = json.load(boat_file)
