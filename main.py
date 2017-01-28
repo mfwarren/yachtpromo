@@ -78,9 +78,7 @@ def main():
             if f == 'meta.json':
                 i = i + 1
                 print(f'Video {i}')
-                if i > 10:
-                    sys.exit()
-                if i <= 4:
+                if i <= 10:
                     continue
 
                 with open(os.path.join(root, f)) as boat_file:
