@@ -10,6 +10,7 @@ import http.client
 import os
 import sys
 import random
+import time
 
 from slides import KenBurnsSlide, IntroSlide
 from render import render_slides, render_audio, render_captions
@@ -30,7 +31,12 @@ def make_video(boat_info, pictures):
     video_clip = render_slides(slides)
     video_clip = render_audio(video_clip)
     video_clip = render_captions(video_clip, boat_info)
-    video_clip.write_videofile(f'{boat_info["name"]}.mp4')
+    try:
+        video_clip.write_videofile(f'{boat_info["name"]}.mp4')
+    except ValueError:
+        # retry
+        time.sleep(5)
+        video_clip.write_videofile(f'{boat_info["name"]}.mp4')
     return f'{boat_info["name"]}.mp4'
 
 
@@ -78,7 +84,7 @@ def main():
             if f == 'meta.json':
                 i = i + 1
                 print(f'Video {i}')
-                if i <= 10:
+                if i < 36:
                     continue
 
                 with open(os.path.join(root, f)) as boat_file:

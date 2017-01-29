@@ -65,6 +65,7 @@ def render_audio(video):
     adds a fade out at the end to avoid an abrupt end
     """
     song = random.choice(MUSIC_FILES)
+    print(song)
     audio = mp.AudioFileClip(song)
     audio = audio.set_duration(video.duration)
     audio = afx.audio_fadeout(audio, 1.0)
