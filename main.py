@@ -31,12 +31,7 @@ def make_video(boat_info, pictures):
     video_clip = render_slides(slides)
     video_clip = render_audio(video_clip)
     video_clip = render_captions(video_clip, boat_info)
-    try:
-        video_clip.write_videofile(f'{boat_info["name"]}.mp4')
-    except ValueError:
-        # retry
-        time.sleep(5)
-        video_clip.write_videofile(f'{boat_info["name"]}.mp4')
+    video_clip.write_videofile(f'{boat_info["name"]}.mp4')
     return f'{boat_info["name"]}.mp4'
 
 
@@ -84,15 +79,21 @@ def main():
             if f == 'meta.json':
                 i = i + 1
                 print(f'Video {i}')
-                if i < 36:
+                if i < 53:
                     continue
 
                 with open(os.path.join(root, f)) as boat_file:
                     boat_info = json.load(boat_file)
                 pictures = image_paths_in(root)
-                filename = make_video(boat_info, pictures)
                 filename= f'{boat_info["name"]}.mp4'
-                upload_video(filename, boat_info)
+                try:
+                    filename = make_video(boat_info, pictures)
+                    upload_video(filename, boat_info)
+                except Exception:
+                    # retry
+                    time.sleep(5)
+                    filename = make_video(boat_info, pictures)
+                    upload_video(filename, boat_info)
 
 
 if __name__ == '__main__':
