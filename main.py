@@ -78,9 +78,9 @@ def main():
         for f in files:
             if f == 'meta.json':
                 i = i + 1
-                print(f'Video {i}')
-                if i < 53:
+                if i < 267:
                     continue
+                print(f'Video {i}')
 
                 with open(os.path.join(root, f)) as boat_file:
                     boat_info = json.load(boat_file)
@@ -89,11 +89,10 @@ def main():
                 try:
                     filename = make_video(boat_info, pictures)
                     upload_video(filename, boat_info)
-                except Exception:
-                    # retry
-                    time.sleep(5)
-                    filename = make_video(boat_info, pictures)
-                    upload_video(filename, boat_info)
+                except ValueError:
+                    print("skipped")
+                    with open('skipped.txt', 'a+') as skipped_file:
+                        skipped_file.write(boat_info['name'])
 
 
 if __name__ == '__main__':
