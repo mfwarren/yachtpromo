@@ -78,7 +78,7 @@ def main():
         for f in files:
             if f == 'meta.json':
                 i = i + 1
-                if i < 267:
+                if i < 459:
                     continue
                 print(f'Video {i}')
 
@@ -90,6 +90,10 @@ def main():
                     filename = make_video(boat_info, pictures)
                     upload_video(filename, boat_info)
                 except ValueError:
+                    print("skipped")
+                    with open('skipped.txt', 'a+') as skipped_file:
+                        skipped_file.write(boat_info['name'])
+                except OSError:
                     print("skipped")
                     with open('skipped.txt', 'a+') as skipped_file:
                         skipped_file.write(boat_info['name'])
